@@ -1,0 +1,49 @@
+=========================================
+PROMPTS FOR AI PLACEMENT PREPARATION AGENT
+=========================================
+
+1. Daily Aptitude Question Prompt:
+----------------------------------
+Generate one easy aptitude question along with its answer.
+
+Example Output Format:
+Question:
+What is 25% of 200?
+
+Answer:
+50
+
+
+2. Daily Coding Question Prompt:
+---------------------------------
+Generate one easy coding question for freshers.
+
+Example Output Format:
+Reverse an Array
+
+Input
+1 2 3 4
+
+Output
+4 3 2 1
+
+
+3. Daily Interview Tip Prompt:
+-------------------------------
+Give one interview tip for placement preparation.
+
+Example Output Format:
+Maintain eye contact while answering interview questions.
+
+
+4. Resume Feedback Prompt:
+---------------------------
+Analyze this resume.
+
+Provide:
+- Skills (extracted key skills)
+- Weaknesses (areas of improvement or gaps)
+- Suggestions (concrete recommendations to improve the resume)
+- ATS Score (estimated ATS compatibility score out of 100)
+
+Format the output clearly using bullet points and readable headers.

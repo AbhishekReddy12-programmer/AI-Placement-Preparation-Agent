@@ -1,0 +1,645 @@
+{
+  "updatedAt": "2026-08-10T18:11:22.764Z",
+  "createdAt": "2026-08-10T18:05:55.750Z",
+  "id": "xspvT8mo4w6bE2Z9",
+  "name": "My workflow",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "2c3b8e5c-b92b-4e4d-86ee-6a867ea134c5",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "id": "c7f7a037-9dd3-40a1-94d9-c6271fcd46b5",
+      "name": "Schedule Trigger (Cron)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -656,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1q8Sj3jXcdRFxYKnedRa097TkcESxMnvhiN6UrCKKwIs",
+          "mode": "list",
+          "cachedResultName": "AI Placement Questions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1q8Sj3jXcdRFxYKnedRa097TkcESxMnvhiN6UrCKKwIs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "931f5abc-8422-4779-8564-d4bc7d942325",
+      "name": "Google Sheets (Read Rows)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -448,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "93456a78-e9bd-4442-b07f-b5c506747d64",
+      "name": "Loop Over Students",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "YOUR_GEMINI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Generate one easy aptitude question along with its answer. Format as:\\nQuestion:\\n[question]\\nAnswer:\\n[answer]\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "74ac7e03-4ef0-414e-be19-b8626c8b6bb7",
+      "name": "HTTP Request (Aptitude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "YOUR_GEMINI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Generate one easy coding question for freshers (e.g. Reverse an array) along with sample Input and Output. Format as:\\nQuestion Name\\nInput:\\n[input]\\nOutput:\\n[output]\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "2925b3a4-83de-481b-bc37-84324f752fa4",
+      "name": "HTTP Request (Coding)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        0,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "YOUR_GEMINI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Give one short and useful interview tip for placement preparation.\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "6c8e9591-cc69-4510-9b25-0782a5d31f92",
+      "name": "HTTP Request (Interview Tip)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        0,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "5b74f4ec-af15-49bc-9ced-262730305a42",
+      "name": "Merge Answers (Aptitude & Coding)",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        224,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "e2d4e1c4-717f-44c8-acef-4f9570d4c850",
+      "name": "Merge Answers (All)",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        352,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const aptitude = $('HTTP Request (Aptitude)').item.json.candidates[0].content.parts[0].text;\nconst coding = $('HTTP Request (Coding)').item.json.candidates[0].content.parts[0].text;\nconst tip = $('HTTP Request (Interview Tip)').item.json.candidates[0].content.parts[0].text;\nconst student = $('Loop Over Students').item.json;\nconst today = new Date().toISOString().split('T')[0];\n\nconst aptitudeHtml = aptitude.replace(/\\n/g, '<br>');\nconst codingHtml = coding.replace(/\\n/g, '<br>');\nconst tipHtml = tip.replace(/\\n/g, '<br>');\n\nconst htmlBody = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin:0; padding:0; background-color:#f0f2f5; font-family:'Segoe UI',Roboto,Arial,sans-serif;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f0f2f5; padding:32px 0;\">\n    <tr>\n      <td align=\"center\">\n        <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08);\">\n          <!-- Header -->\n          <tr>\n            <td style=\"background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); padding:40px 32px; text-align:center;\">\n              <h1 style=\"margin:0; color:#ffffff; font-size:28px; font-weight:700; letter-spacing:-0.5px;\">\ud83c\udfaf Daily Placement Prep</h1>\n              <p style=\"margin:8px 0 0; color:rgba(255,255,255,0.85); font-size:14px;\">${today}</p>\n            </td>\n          </tr>\n          <!-- Greeting -->\n          <tr>\n            <td style=\"padding:32px 32px 16px;\">\n              <p style=\"margin:0; font-size:16px; color:#374151;\">Hello <strong style=\"color:#667eea;\">${student.Name}</strong>,</p>\n              <p style=\"margin:8px 0 0; font-size:14px; color:#6b7280;\">Here is your personalized daily placement preparation package.</p>\n            </td>\n          </tr>\n          <!-- Aptitude Section -->\n          <tr>\n            <td style=\"padding:0 32px 16px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f8f0ff; border-radius:12px; border-left:4px solid #8b5cf6;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <h2 style=\"margin:0 0 12px; font-size:16px; color:#7c3aed; text-transform:uppercase; letter-spacing:1px;\">\ud83e\uddee Aptitude Question</h2>\n                    <div style=\"font-size:14px; color:#4b5563; line-height:1.7;\">${aptitudeHtml}</div>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <!-- Coding Section -->\n          <tr>\n            <td style=\"padding:0 32px 16px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f0fdf4; border-radius:12px; border-left:4px solid #22c55e;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <h2 style=\"margin:0 0 12px; font-size:16px; color:#16a34a; text-transform:uppercase; letter-spacing:1px;\">\ud83d\udcbb Coding Challenge</h2>\n                    <div style=\"font-size:14px; color:#4b5563; line-height:1.7;\">${codingHtml}</div>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <!-- Interview Tip Section -->\n          <tr>\n            <td style=\"padding:0 32px 16px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#eff6ff; border-radius:12px; border-left:4px solid #3b82f6;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <h2 style=\"margin:0 0 12px; font-size:16px; color:#2563eb; text-transform:uppercase; letter-spacing:1px;\">\ud83d\udde3\ufe0f Interview Tip</h2>\n                    <div style=\"font-size:14px; color:#4b5563; line-height:1.7;\">${tipHtml}</div>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <!-- Motivational Quote -->\n          <tr>\n            <td style=\"padding:0 32px 24px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#fefce8; border-radius:12px; text-align:center;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <p style=\"margin:0; font-size:18px; color:#a16207; font-style:italic;\">\u2728 &ldquo;Success comes from consistent preparation.&rdquo;</p>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <!-- Footer -->\n          <tr>\n            <td style=\"background-color:#f9fafb; padding:24px 32px; text-align:center; border-top:1px solid #e5e7eb;\">\n              <p style=\"margin:0; font-size:13px; color:#9ca3af;\">Best Wishes! \ud83d\ude80</p>\n              <p style=\"margin:4px 0 0; font-size:12px; color:#d1d5db;\">AI Placement Prep Assistant &bull; Powered by Gemini</p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`;\n\nreturn {\n  student_name: student.Name,\n  student_email: student.Email,\n  row_number: student.row_number || 2,\n  aptitude,\n  coding,\n  interview_tip: tip,\n  date: today,\n  htmlBody\n};"
+      },
+      "id": "fcabbc97-12d7-4489-8dba-426ec0dff102",
+      "name": "Process Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1q8Sj3jXcdRFxYKnedRa097TkcESxMnvhiN6UrCKKwIs",
+          "mode": "list",
+          "cachedResultName": "AI Placement Questions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1q8Sj3jXcdRFxYKnedRa097TkcESxMnvhiN6UrCKKwIs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1331103511,
+          "mode": "list",
+          "cachedResultName": "Questions"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "question": "={{ $json.aptitude }}",
+            "answer": "={{ $json.coding }}",
+            "explanation": "={{ $json.interview_tip }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "74881404-2e5f-48e9-a9f0-fb7745d37fc7",
+      "name": "Google Sheets (Update Row)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        704,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Process Response').item.json.student_email || 'bussareddyabhishekreddy@gmail.com' }}",
+        "subject": "=\ud83c\udfaf Daily Placement Preparation \u2014 {{ $('Process Response').item.json.date }}",
+        "message": "={{ $('Process Response').item.json.htmlBody }}",
+        "options": {}
+      },
+      "id": "ca25d28d-2692-42b2-b958-569119cfefd0",
+      "name": "Gmail (Send Prep Email)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        912,
+        192
+      ],
+      "webhookId": "fd75cc58-fbf5-4028-8f77-64b43ee70a12"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "YOUR_GEMINI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "options": {},
+        "jsonBody": "={{ $json.bodyString }}"
+      },
+      "id": "2c2f0387-cda3-496b-84be-f337e4b77e58",
+      "name": "Gemini API (Resume Feedback)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        700,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const feedbackRaw = $('Gemini API (Resume Feedback)').item.json.candidates[0].content.parts[0].text;\nconst studentName = $('Submit Resume Form').item.json[\"Student Name\"] || 'Student';\nconst studentEmail = $('Submit Resume Form').item.json[\"Student Email\"] || 'bussareddyabhishekreddy@gmail.com';\n\nfunction parseSection(text, heading) {\n  const regex = new RegExp(`##\\\\s*${heading}[\\\\s\\\\S]*?(?=##|$)`, 'i');\n  const match = text.match(regex);\n  if (!match) return '<p style=\"color:#9ca3af;\">Not available</p>';\n  let content = match[0].replace(new RegExp(`##\\\\s*${heading}`, 'i'), '').trim();\n  content = content.replace(/^[\\-\\*]\\s+/gm, '\u2022 ');\n  content = content.replace(/\\n/g, '<br>');\n  return content;\n}\n\nconst skills = parseSection(feedbackRaw, 'Skills Extracted');\nconst weaknesses = parseSection(feedbackRaw, 'Weaknesses & Gaps');\nconst suggestions = parseSection(feedbackRaw, 'Suggestions for Improvement');\nconst atsRaw = parseSection(feedbackRaw, 'ATS Score');\n\nconst scoreMatch = atsRaw.match(/(\\d{1,3})/);\nconst atsScore = scoreMatch ? parseInt(scoreMatch[1]) : 'N/A';\nconst scoreColor = typeof atsScore === 'number' ? (atsScore >= 70 ? '#22c55e' : atsScore >= 40 ? '#f59e0b' : '#ef4444') : '#6b7280';\nconst today = new Date().toISOString().split('T')[0];\n\nconst htmlBody = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin:0; padding:0; background-color:#f0f2f5; font-family:'Segoe UI',Roboto,Arial,sans-serif;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f0f2f5; padding:32px 0;\">\n    <tr>\n      <td align=\"center\">\n        <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08);\">\n          <tr>\n            <td style=\"background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 100%); padding:40px 32px; text-align:center;\">\n              <h1 style=\"margin:0; color:#ffffff; font-size:28px; font-weight:700; letter-spacing:-0.5px;\">\ud83d\udcc4 Resume Analysis Report</h1>\n              <p style=\"margin:8px 0 0; color:rgba(255,255,255,0.85); font-size:14px;\">Prepared for ${studentName} &bull; ${today}</p>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:24px 32px 16px; text-align:center;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f9fafb; border-radius:12px;\">\n                <tr>\n                  <td style=\"padding:24px; text-align:center;\">\n                    <p style=\"margin:0 0 8px; font-size:12px; color:#9ca3af; text-transform:uppercase; letter-spacing:2px; font-weight:600;\">ATS Compatibility Score</p>\n                    <p style=\"margin:0; font-size:56px; font-weight:800; color:${scoreColor}; line-height:1;\">${atsScore}${typeof atsScore === 'number' ? '<span style=\"font-size:24px; color:#9ca3af;\">/100</span>' : ''}</p>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:0 32px 16px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f0fdf4; border-radius:12px; border-left:4px solid #22c55e;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <h2 style=\"margin:0 0 12px; font-size:16px; color:#16a34a; text-transform:uppercase; letter-spacing:1px;\">\u2705 Skills Extracted</h2>\n                    <div style=\"font-size:14px; color:#4b5563; line-height:1.8;\">${skills}</div>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:0 32px 16px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#fef2f2; border-radius:12px; border-left:4px solid #ef4444;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <h2 style=\"margin:0 0 12px; font-size:16px; color:#dc2626; text-transform:uppercase; letter-spacing:1px;\">\u26a0\ufe0f Weaknesses & Gaps</h2>\n                    <div style=\"font-size:14px; color:#4b5563; line-height:1.8;\">${weaknesses}</div>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:0 32px 16px;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#eff6ff; border-radius:12px; border-left:4px solid #3b82f6;\">\n                <tr>\n                  <td style=\"padding:20px 24px;\">\n                    <h2 style=\"margin:0 0 12px; font-size:16px; color:#2563eb; text-transform:uppercase; letter-spacing:1px;\">\ud83d\udca1 Suggestions</h2>\n                    <div style=\"font-size:14px; color:#4b5563; line-height:1.8;\">${suggestions}</div>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"background-color:#f9fafb; padding:24px 32px; text-align:center; border-top:1px solid #e5e7eb;\">\n              <p style=\"margin:0; font-size:13px; color:#9ca3af;\">Keep improving your resume, ${studentName}! \ud83d\ude80</p>\n              <p style=\"margin:4px 0 0; font-size:12px; color:#d1d5db;\">AI Placement Prep Assistant &bull; Powered by Gemini</p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`;\n\nreturn {\n  studentName,\n  studentEmail,\n  atsScore,\n  htmlBody\n};"
+      },
+      "id": "13cdc5aa-4284-4663-a45e-fe5c5b4af2cc",
+      "name": "Format Resume Feedback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Submit Resume Form').item.json['Student Email'] || 'bussareddyabhishekreddy@gmail.com' }}",
+        "subject": "=\ud83d\udcc4 Your Resume Analysis Report \u2014 {{ $('Submit Resume Form').item.json['Student Name'] }}",
+        "emailType": "html",
+        "message": "={{ $json.htmlBody }}",
+        "html": "={{ $json.htmlBody }}",
+        "options": {
+          "emailType": "html"
+        }
+      },
+      "id": "f4593cc9-5253-438b-90ae-c8156bf82e89",
+      "name": "Gmail (Send Feedback)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1100,
+        560
+      ],
+      "webhookId": "4f594fe3-b5db-49de-b9ce-09ce42cfc803"
+    },
+    {
+      "parameters": {
+        "path": "resume-feedback",
+        "formTitle": "\ud83d\udcc4 AI Resume Feedback & ATS Evaluator",
+        "formDescription": "Upload your resume PDF to receive an instant AI-driven ATS compatibility score, skills analysis, and improvement recommendations directly to your email.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Student Name",
+              "fieldType": "text",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Student Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Upload Resume (PDF)",
+              "fieldType": "file",
+              "requiredField": true,
+              "multipleFiles": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "form-trigger-node-id-12345",
+      "name": "Submit Resume Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        100,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "={{ Object.keys($binary || {})[0] || 'data' }}",
+        "options": {}
+      },
+      "id": "extract-pdf-text-node-id",
+      "name": "Extract PDF Text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        300,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const pdfText = ($json.text || \"\").replace(/[\\x00-\\x1F]/g, \" \");\n\nconst promptText = `Analyze this resume content and provide actionable feedback. Structure your response EXACTLY in these sections with these exact headings:\n\n## Skills Extracted\nList the key skills found in the resume as bullet points.\n\n## Weaknesses & Gaps\nList areas of improvement or gaps as bullet points.\n\n## Suggestions for Improvement\nProvide concrete recommendations as bullet points.\n\n## ATS Score\nProvide an estimated ATS compatibility score out of 100 as a single number followed by a brief explanation.\n\nResume Content:\n` + pdfText;\n\nconst bodyObj = {\n  contents: [\n    {\n      parts: [\n        { text: promptText }\n      ]\n    }\n  ]\n};\n\nreturn [{\n  json: {\n    ...$json,\n    bodyString: JSON.stringify(bodyObj)\n  }\n}];"
+      },
+      "id": "e4d3c2b1-0a9b-8c7d-6e5f-4a3b2c1d0e9f",
+      "name": "Prepare Resume Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        560
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (Read Rows)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger (Cron)": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (Read Rows)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets (Read Rows)": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Students",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Students": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request (Aptitude)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request (Coding)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request (Interview Tip)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request (Aptitude)": {
+      "main": [
+        [
+          {
+            "node": "Merge Answers (Aptitude & Coding)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request (Coding)": {
+      "main": [
+        [
+          {
+            "node": "Merge Answers (Aptitude & Coding)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Request (Interview Tip)": {
+      "main": [
+        [
+          {
+            "node": "Merge Answers (All)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Answers (Aptitude & Coding)": {
+      "main": [
+        [
+          {
+            "node": "Merge Answers (All)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Answers (All)": {
+      "main": [
+        [
+          {
+            "node": "Process Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Response": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (Update Row)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets (Update Row)": {
+      "main": [
+        [
+          {
+            "node": "Gmail (Send Prep Email)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail (Send Prep Email)": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Students",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF Text": {
+      "main": [
+        [
+          {
+            "node": "Prepare Resume Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini API (Resume Feedback)": {
+      "main": [
+        [
+          {
+            "node": "Format Resume Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Resume Feedback": {
+      "main": [
+        [
+          {
+            "node": "Gmail (Send Feedback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read PDF Resume": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inject Sample Resume": {
+      "main": [
+        [
+          {
+            "node": "Prepare Resume Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit Resume Form": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Resume Prompt": {
+      "main": [
+        [
+          {
+            "node": "Gemini API (Resume Feedback)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "f2d88977-3c62-441b-807a-aaa918cb9e82",
+  "activeVersionId": null,
+  "versionCounter": 4,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-08-10T18:05:55.763Z",
+      "createdAt": "2026-08-10T18:05:55.763Z",
+      "role": "workflow:owner",
+      "workflowId": "xspvT8mo4w6bE2Z9",
+      "projectId": "mEeRTEUcHeC5cTbO",
+      "project": {
+        "updatedAt": "2026-08-10T18:03:25.516Z",
+        "createdAt": "2026-08-10T18:00:55.586Z",
+        "id": "mEeRTEUcHeC5cTbO",
+        "name": "Bussareddy Abhishek <bussareddyabhishekreddy@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "18d7c227-383f-464f-949e-3c992425d834"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

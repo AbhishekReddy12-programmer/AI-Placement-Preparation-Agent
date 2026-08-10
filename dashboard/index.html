@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Placement Prep Portal</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Prep<span class="highlight">Agent</span></span>
+      </div>
+      <div class="nav-links">
+        <button id="nav-student" class="nav-btn active">Student Portal</button>
+        <button id="nav-admin" class="nav-btn">Admin Panel</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    
+    <!-- ================= STUDENT PORTAL ================= -->
+    <section id="student-portal" class="portal-section active">
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h1>Welcome back, <span id="student-name">Alex</span>!</h1>
+          <p>Here is your personalized placement prep package for today.</p>
+        </div>
+        <div class="progress-ring-container">
+          <div class="progress-pill">
+            <span class="pulse-dot"></span> Today's Progress: <strong id="progress-percent">0%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Daily Aptitude Challenge -->
+        <div class="card aptitude-card">
+          <div class="card-header">
+            <div class="header-title">
+              <span class="card-tag tag-purple">Mathematics</span>
+              <h2>Daily Aptitude Question</h2>
+            </div>
+            <span class="points-badge">+10 XP</span>
+          </div>
+          <div class="card-body">
+            <p class="question-text" id="aptitude-question">A train covers a distance of 480 km at a uniform speed. If the speed had been 8 km/h less, then it would have taken 3 hours more to cover the same distance. What is the original speed of the train?</p>
+            
+            <div class="options-container" id="aptitude-options">
+              <!-- Render options dynamically -->
+            </div>
+            <div id="aptitude-feedback" class="feedback-msg hidden"></div>
+          </div>
+        </div>
+
+        <!-- Daily Interview Tip & Quote -->
+        <div class="card tip-card">
+          <div class="card-header">
+            <div class="header-title">
+              <span class="card-tag tag-blue">HR Interview</span>
+              <h2>Interview Tip of the Day</h2>
+            </div>
+          </div>
+          <div class="card-body">
+            <blockquote class="tip-quote">
+              <p id="daily-tip">"Maintain consistent eye contact while answering interview questions, and remember to pause for a second to structure your thoughts before replying."</p>
+            </blockquote>
+            
+            <hr class="divider">
+            
+            <div class="quote-section">
+              <span class="quote-label">Daily Motivation</span>
+              <p class="quote-text" id="daily-quote">"Success comes from consistent preparation. Small steps every day lead to massive results."</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coding Playground -->
+        <div class="card coding-card">
+          <div class="card-header">
+            <div class="header-title">
+              <span class="card-tag tag-green">Algorithms</span>
+              <h2>Daily Coding Challenge</h2>
+            </div>
+            <span class="difficulty-badge difficulty-easy">Easy</span>
+          </div>
+          <div class="card-body">
+            <h3 id="coding-title" class="coding-problem-title">Reverse an Array</h3>
+            <p class="problem-desc" id="coding-desc">Write a function that takes an array of integers and reverses its element ordering in place.</p>
+            
+            <div class="code-editor-container">
+              <div class="editor-header">
+                <span class="lang-label">JavaScript</span>
+                <span class="editor-dot red"></span>
+                <span class="editor-dot yellow"></span>
+                <span class="editor-dot green"></span>
+              </div>
+              <textarea id="code-editor" spellcheck="false">function reverseArray(arr) {
+  // Write your code here
+  return arr.reverse();
+}</textarea>
+            </div>
+
+            <div class="compiler-control">
+              <div class="compiler-test-case">
+                <strong>Sample Input:</strong> <code id="coding-input">[1, 2, 3, 4]</code>
+              </div>
+              <button id="btn-run-code" class="btn btn-primary">Run Test Cases</button>
+            </div>
+
+            <div id="code-console" class="code-console-output hidden">
+              <span class="console-title">Console Output:</span>
+              <pre id="console-logs">Output: [4, 3, 2, 1] (Passed!)</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resume Reviewer -->
+        <div class="card resume-card">
+          <div class="card-header">
+            <div class="header-title">
+              <span class="card-tag tag-cyan">AI Parser</span>
+              <h2>AI Resume Feedback & ATS Checker</h2>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="section-instruction">Upload your resume in PDF format to receive instant ATS evaluation and improvement tips from Gemini.</p>
+            
+            <div class="upload-dropzone" id="resume-dropzone">
+              <div class="dropzone-inner">
+                <span class="upload-icon">📄</span>
+                <p class="dropzone-text">Drag & drop your <strong>Resume.pdf</strong> here, or <span class="browse-link">browse files</span></p>
+                <input type="file" id="resume-input" accept=".pdf" class="hidden-input">
+              </div>
+            </div>
+
+            <!-- Upload progress -->
+            <div id="upload-progress-bar" class="progress-bar-container hidden">
+              <div class="progress-bar-labels">
+                <span>Analyzing resume via Gemini AI...</span>
+                <span id="progress-percent-val">0%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="resume-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Resume Results -->
+            <div id="resume-results" class="resume-results-section hidden">
+              <div class="results-top-header">
+                <h3>Analysis Report</h3>
+                <button id="btn-reset-resume" class="btn btn-secondary btn-sm">Upload New</button>
+              </div>
+              
+              <div class="results-grid">
+                <div class="score-circle-card">
+                  <div class="ats-score-gauge">
+                    <svg class="progress-ring" width="120" height="120">
+                      <circle class="progress-ring-circle-bg" stroke="#1e293b" stroke-width="8" fill="transparent" r="50" cx="60" cy="60"/>
+                      <circle class="progress-ring-circle" id="ats-gauge-circle" stroke="url(#gradient-cyan)" stroke-width="8" stroke-dasharray="314.16" stroke-dashoffset="314.16" fill="transparent" r="50" cx="60" cy="60"/>
+                      <defs>
+                        <linearGradient id="gradient-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#06b6d4" />
+                          <stop offset="100%" stop-color="#3b82f6" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div class="score-text">
+                      <span id="ats-score-value">87</span>
+                      <span class="score-label">ATS Score</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="feedback-details">
+                  <div class="feedback-block">
+                    <h4>🛠️ Identified Skills</h4>
+                    <div class="skills-tags" id="resume-skills">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+
+                  <div class="feedback-block">
+                    <h4>⚠️ Key Weaknesses</h4>
+                    <ul class="bullet-list" id="resume-weaknesses">
+                      <!-- Rendered dynamically -->
+                    </ul>
+                  </div>
+
+                  <div class="feedback-block">
+                    <h4>💡 Actionable Suggestions</h4>
+                    <ul class="bullet-list" id="resume-suggestions">
+                      <!-- Rendered dynamically -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= ADMIN PANEL ================= -->
+    <section id="admin-panel" class="portal-section">
+      <div class="admin-top-bar">
+        <div>
+          <h1>n8n Placement Agent Admin</h1>
+          <p>Manage workflow execution and student subscriber databases.</p>
+        </div>
+        <button id="btn-trigger-agent" class="btn btn-primary btn-lg">
+          <span class="btn-icon">⚙️</span> Run Daily Agent Workflow
+        </button>
+      </div>
+
+      <!-- Live Pipeline Simulation Area -->
+      <div id="pipeline-simulation" class="pipeline-card hidden">
+        <div class="pipeline-header">
+          <h3>n8n Workflow Execution Pipeline</h3>
+          <span id="pipeline-status" class="status-badge running">Running...</span>
+        </div>
+        
+        <div class="pipeline-flow">
+          <div class="pipeline-node" id="node-cron">
+            <span class="node-icon">⏰</span>
+            <span class="node-name">Cron Trigger</span>
+          </div>
+          <div class="pipeline-connector"></div>
+          
+          <div class="pipeline-node" id="node-sheets">
+            <span class="node-icon">📊</span>
+            <span class="node-name">Sheets Read</span>
+          </div>
+          <div class="pipeline-connector"></div>
+
+          <div class="pipeline-node" id="node-gemini">
+            <span class="node-icon">🧠</span>
+            <span class="node-name">Gemini API</span>
+          </div>
+          <div class="pipeline-connector"></div>
+
+          <div class="pipeline-node" id="node-update">
+            <span class="node-icon">💾</span>
+            <span class="node-name">Update Sheets</span>
+          </div>
+          <div class="pipeline-connector"></div>
+
+          <div class="pipeline-node" id="node-gmail">
+            <span class="node-icon">📧</span>
+            <span class="node-name">Gmail Sent</span>
+          </div>
+        </div>
+
+        <div class="pipeline-logs">
+          <pre id="pipeline-log-text">[19:49:00] Initializing placement prep run...
+[19:49:01] Reading Student Database from Google Sheet...
+[19:49:02] Found 3 registered students. Starting loop...</pre>
+        </div>
+      </div>
+
+      <!-- Database Table Card -->
+      <div class="card admin-db-card">
+        <div class="card-header">
+          <h2>Student Database (Synced from Google Sheets)</h2>
+          <span class="db-sync-badge">🟢 Connected to 'PlacementAgent'</span>
+        </div>
+        <div class="card-body no-padding">
+          <div class="table-container">
+            <table class="student-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>Last Run Date</th>
+                  <th>Aptitude Question</th>
+                  <th>Coding Problem</th>
+                  <th>Interview Tip</th>
+                </tr>
+              </thead>
+              <tbody id="student-table-body">
+                <!-- Rows injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>© 2026 AI Placement Preparation Assistant. Built with n8n & Google Gemini API.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
