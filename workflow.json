@@ -558,28 +558,6 @@
         ]
       ]
     },
-    "Read PDF Resume": {
-      "main": [
-        [
-          {
-            "node": "Extract PDF Text",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Inject Sample Resume": {
-      "main": [
-        [
-          {
-            "node": "Prepare Resume Prompt",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Submit Resume Form": {
       "main": [
         [
